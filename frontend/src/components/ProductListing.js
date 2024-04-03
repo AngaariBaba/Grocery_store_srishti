@@ -1,79 +1,41 @@
 import React from "react";
 import './products.css';
+import Card from "./Card";
 
 function Products()
 {
+
+
+  const Samaan = [
+                  {
+                    item:"Arhar Daal",
+                    link:"https://m.media-amazon.com/images/I/41KL4K4YHXL.jpg",
+                    price:"50"
+                  },
+                  {
+                    item:"Chole",
+                    link:"https://m.media-amazon.com/images/I/619Uw840ucL._AC_UL320_.jpg",
+                    price:"60"
+                  },
+
+                  {
+                    item:"Milk",
+                    link:"https://m.media-amazon.com/images/I/71qhf77htmL._AC_UL320_.jpg",
+                    price:"30"
+                  }
+
+                  ]
+
     
     return(<>
+    <h1>Welcome to The Srashti Shop</h1>
     <div className="all">
-        <div className="card">
-        <h1>Arher daal</h1>
-        <img src="https://m.media-amazon.com/images/I/91zrkugn7-L._AC_UL320_.jpg" height='200px' width='200px'/>      
-        <h3>50Rs/Kg</h3>
-      
-      <button>Add to card</button>
-      
-        </div>
 
-
-        <div className="card">
-        <h1>Arher daal</h1>
-        <img src="https://m.media-amazon.com/images/I/91zrkugn7-L._AC_UL320_.jpg" height='200px' width='200px'/>      
-        <h3>50Rs/Kg</h3>
       
-      <button>Add to card</button>
+      {Samaan.map((ele)=>(<>
+      <Card item={ele.item} link={ele.link} price={ele.price} />
+      </>))}
       
-        </div>
-
-
-        <div className="card">
-        <h1>Arher daal</h1>
-        <img src="https://m.media-amazon.com/images/I/91zrkugn7-L._AC_UL320_.jpg" height='200px' width='200px'/>      
-        <h3>50Rs/Kg</h3>
-      
-      <button>Add to card</button>
-      
-        </div>
-
-
-        <div className="card">
-        <h1>Arher daal</h1>
-        <img src="https://m.media-amazon.com/images/I/91zrkugn7-L._AC_UL320_.jpg" height='200px' width='200px'/>      
-        <h3>50Rs/Kg</h3>
-      
-      <button>Add to card</button>
-      
-        </div>
-
-
-
-        <div className="card">
-        <h1>Arher daal</h1>
-        <img src="https://m.media-amazon.com/images/I/91zrkugn7-L._AC_UL320_.jpg" height='200px' width='200px'/>      
-        <h3>50Rs/Kg</h3>
-      
-      <button>Add to card</button>
-      
-        </div>
-
-
-
-        <div className="card">
-        <h1>Arher daal</h1>
-        <img src="https://m.media-amazon.com/images/I/91zrkugn7-L._AC_UL320_.jpg" height='200px' width='200px'/>      
-        <h3>50Rs/Kg</h3>
-      
-      <button>Add to card</button>
-      
-        </div>
-        <div className="card">
-        <h1>Arher daal</h1>
-        <img src="https://m.media-amazon.com/images/I/91zrkugn7-L._AC_UL320_.jpg" height='200px' width='200px'/>      
-        <h3>50Rs/Kg</h3>
-      
-      <button>Add to card</button>
-      
-        </div>
     </div>
     </>);
 }
