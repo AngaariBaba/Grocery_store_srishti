@@ -1,13 +1,17 @@
 import React from "react";
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import './Welcome.css';
 
-function Welcome()
-{
-    return(<>
-    <h1>Welcome to Our Shop,<br/>You Are?</h1>
-   <Link to='/ownerlogin'><button>Owner</button></Link>
-   <Link to='/customerlogin'> <button>Customer</button></Link>
-    </>);
+function Welcome() {
+    return (
+        <div className="container">
+            <h1 className="title">Welcome to Our Shop,<br/>You Are?</h1>
+            <div className="buttonContainer">
+                <Link to='/ownerlogin' className="button">Owner</Link>
+                <Link to='/customerlogin' className="button">Customer</Link>
+            </div>
+        </div>
+    );
 }
 
 export default Welcome;

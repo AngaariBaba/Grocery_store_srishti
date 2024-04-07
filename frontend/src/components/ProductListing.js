@@ -8,7 +8,7 @@ import {useNavigate} from 'react-router-dom';
 
 
 
-function Products({InsertIntoOrders})
+function Products({InsertIntoOrders,user})
 {
 
   const [Samaan,setSaman] = useState([{}]);
@@ -16,6 +16,12 @@ function Products({InsertIntoOrders})
   const [TotalCost,AddCost] = useState(0);
 
   const navigate = useNavigate();
+
+    if(user===undefined)
+    {
+        navigate('/customerlogin');
+    }
+
   function InsertIntoCart(item,cost,id)
   {
     InsertToCart([...Cart,{id:id,pname:item,price:cost,quantity:1}]);

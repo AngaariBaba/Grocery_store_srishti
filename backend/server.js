@@ -11,11 +11,11 @@ const db = new sqlite3.Database('./groceryStore.db');
 db.serialize(() => {
     db.run(`CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT UNIQUE,
+        name TEXT UNIQUE,
         password TEXT,
         email TEXT UNIQUE,
         address TEXT,
-        contactNumber TEXT
+        phoneNumber TEXT
     )`);
 
     db.run(`CREATE TABLE IF NOT EXISTS products (
@@ -33,13 +33,15 @@ app.use(cors());
 
 // User Signup
 app.post('/api/signup', async (req, res) => {
+    console.log("Inerting");
     try {
-        const { username, password, email, address, contactNumber } = req.body;
-
-        db.run(`INSERT INTO users (username, password, email, address, contactNumber) VALUES (?, ?, ?, ?, ?)`,
-            [username, password, email, address, contactNumber],
+        const { name, password, email, address, phoneNumber } = req.body;
+        
+        db.run(`INSERT INTO users (name, password, email, address, phoneNumber) VALUES (?, ?, ?, ?, ?)`,
+            [name, password, email, address, phoneNumber],
             function (err) {
                 if (err) {
+                    console.log("Problem in inserton",err);
                     return res.status(500).json({ message: 'Error registering user', error: err.message });
                 }
                 res.status(201).json({ message: 'User registered successfully' });
@@ -55,15 +57,26 @@ app.post('/api/signup', async (req, res) => {
 app.post('/api/login', async (req, res) => {
    
         const { username, password } = req.body;
-
-        if(username=="naman" && password=="1234")
+        await db.all("SELECT * FROM users WHERE name=? AND password = ?",[username,password],(err,user)=>{
+        if(err)
         {
-            res.json({ok:"yes"});
+            console.log(err);
         }
         else
         {
-            res.json({ok:"no"});
+            if(user)
+            {
+                console.log(user);
+                res.json({user,found:true});
+            }
+            else
+            {
+                console.log(user);
+            res.json({found:false});
+            }
         }
+       })
+
         
 });
 
@@ -129,6 +142,8 @@ db.run('DELETE FROM PRODUCTS WHERE name like ?',['%ilk%'],(err)=>{
         console.log("deleted");
     }
 });
+
+
 
 
 

@@ -1,23 +1,40 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './OrderSummaryReceipt.css';
 import { castToError } from 'openai/core.mjs';
+import {useNavigate} from 'react-router-dom';
+import NotAllowed from './NotAllowed';
 
-const OrderSummaryReceipt = ({ products }) => {
+
+const OrderSummaryReceipt = ({ user,products }) => {
+    const [cname,setname] = useState("naman");
+    const [caddress,setaddress] = useState("mathura");
+
   const customer = {
-    name: 'John Doe',
-    address: '123 Main St, City, State, Zip',
+    name: cname,
+    address: caddress,
   };
 
-  useEffect(() => {
-    console.log("in order summary -> ", products);
-  }, [products]);
-
-  
-  
-  const filteredProducts = products.filter(item => Object.keys(item).length > 0);
   useEffect(()=>{
-    console.log(filteredProducts);
-  },[])
+    console.log("into summery user = ",user[0]);
+    console.log("into summery user = ",user[0].name);
+    if(user!=undefined)
+    {
+    setname(user[0].name);
+    setaddress(user[0].address);
+    }
+    
+  },[user])
+  const nav = useNavigate();
+
+ const a = products;
+
+  if(a === undefined)
+  {
+    return(<NotAllowed/>);
+  }
+
+  const filteredProducts = products.filter(item => Object.keys(item).length > 0);
+  
   const subtotal = filteredProducts.reduce((acc, item) => acc + Number(item.quantity) * Number(item.price), 0);
   console.log("subtotal begin calculated is ",subtotal);
   const taxRate = 0.1; // 10%
@@ -26,6 +43,7 @@ const OrderSummaryReceipt = ({ products }) => {
   const contactNumber = '123-456-7890'; // Dummy contact number
 
   return (
+       
     <div className="order-summary-container">
       <h2 className="order-summary-title">Order Summary</h2>
       <div className="customer-details">
@@ -73,6 +91,7 @@ const OrderSummaryReceipt = ({ products }) => {
         <strong>Contact Number:</strong> {contactNumber}
       </div>
     </div>
+       
   );
 };
 

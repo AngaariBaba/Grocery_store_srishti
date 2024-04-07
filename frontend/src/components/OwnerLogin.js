@@ -1,37 +1,46 @@
 import React, { useState } from "react";
 import axios from 'axios';
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import './OwnerLogin.css';  // Import the separate CSS file
 
-function OwnerLogin()
-{
-
-    const [username,setuser]  = useState('');
-    const [password,Setpassword]  = useState('');
+function OwnerLogin() {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
     const nav = useNavigate();
-    
-    async function HandleLogin()
-    {
-        const resp = await axios.post("http://localhost:5000/api/login",{username,password});
-        if(resp.data.ok=="yes")
-        {
-               
+
+    async function handleLogin() {
+        try {
+            const resp = await axios.post("http://localhost:5000/api/login", { username, password });
+            if (resp.data.ok === "yes") {
                 nav('/enterproducts');
-        }
-        else
-        {
-            console.log("Failed");
+            } else {
+                console.log("Failed");
+            }
+        } catch (error) {
+            console.error("Error:", error);
         }
     }
-    
-    return(<>
-    <h1>Owner Login</h1>
-    <input type="text" onChange={(e)=>{setuser(e.target.value)}} placeholder="Enter Owner ID"/>
-    <input type="password" onChange={(e)=>{Setpassword(e.target.value)}} placeholder="Enter Owner password"/>
-    <button onClick={HandleLogin}>login</button>
-    
-    </>);
-    
-}
 
+    return (
+        <div className="loginContainer">
+            <h1>Owner Login</h1>
+            <input 
+                type="text" 
+                value={username}
+                onChange={(e) => setUsername(e.target.value)} 
+                placeholder="Enter Owner ID"
+                className="inputField"
+            />
+            <input 
+                type="password" 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)} 
+                placeholder="Enter Owner password"
+                className="inputField"
+            />
+            <button onClick={handleLogin} className="loginButton">Login</button>
+        </div>
+    );
+}
 
 export default OwnerLogin;
