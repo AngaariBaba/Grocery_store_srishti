@@ -1,7 +1,7 @@
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const cors = require('cors');
-
+const Razorpay = require('razorpay');
 const app = express();
 const PORT = 5000;
 
@@ -22,7 +22,7 @@ db.serialize(() => {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT,
         image TEXT,
-        description TEXT,
+        category TEXT,
         quantity INTEGER DEFAULT 0,
         price REAL
     )`);
@@ -51,26 +51,20 @@ app.post('/api/signup', async (req, res) => {
 
 
 
-
 // User Login
 app.post('/api/login', async (req, res) => {
-    try {
+   
         const { username, password } = req.body;
 
-        db.get(`SELECT * FROM users WHERE username = ? AND password = ?`, [username, password], (err, user) => {
-            if (err) {
-                return res.status(500).json({ message: 'Error logging in', error: err.message });
-            }
-
-            if (!user) {
-                return res.status(400).json({ message: 'Invalid credentials' });
-            }
-
-            res.status(200).json({ message: 'Logged in successfully', userId: user.id });
-        });
-    } catch (error) {
-        res.status(500).json({ message: 'Error logging in', error: error.message });
-    }
+        if(username=="naman" && password=="1234")
+        {
+            res.json({ok:"yes"});
+        }
+        else
+        {
+            res.json({ok:"no"});
+        }
+        
 });
 
 // Get all products with quantity greater than zero
@@ -85,10 +79,10 @@ app.get('/api/products', (req, res) => {
 
 // Add a new product
 app.post('/api/products', (req, res) => {
-    const { name, image, description, quantity, price } = req.body;
-
-    db.run(`INSERT INTO products (name, image, description, quantity, price) VALUES (?, ?, ?, ?, ?)`,
-        [name, image, description, quantity, price],
+    const { productName, image, category, quantity, price } = req.body;
+    console.log(req.body);
+    db.run(`INSERT INTO products (name, image, category, quantity, price) VALUES (?, ?, ?, ?, ?)`,
+        [productName, image, category, quantity, price],
         function (err) {
             if (err) {
                 return res.status(500).json({ message: 'Error adding product', error: err.message });
@@ -122,6 +116,75 @@ app.delete('/api/products/:id', (req, res) => {
         }
         res.status(200).json({ message: 'Product deleted successfully' });
     });
+});
+
+
+db.run('DELETE FROM PRODUCTS WHERE name like ?',['%ilk%'],(err)=>{
+    if(err)
+    {
+        console.log("error agya bhai");
+    }
+    else
+    {
+        console.log("deleted");
+    }
+});
+
+
+
+//RAZORPAY
+
+const razorpay = new Razorpay({
+    key_id: 'rzp_test_A51z9AKTI3SXov',  // Replace with your Test API Key
+    key_secret: 'wxYZ3SgDzvmWhMcYLdD5vox2'  // Replace with your Test API Secret
+});
+
+app.post('/api/create-order', async (req, res) => {
+    const { amount, currency } = req.body;
+
+    console.log("AMOUNR = ",amount);
+    console.log("CURRENCY = ",currency);
+    const options = {
+        amount: amount,
+        currency: currency,
+        receipt: 'receipt_order_74394',
+        payment_capture: 1
+    };
+
+    try {
+        const response = await razorpay.orders.create(options, function(err, order) {
+            if(err)
+            {
+                console.log(err);
+            }
+            else
+            {
+               res.json(order);
+            }
+          });
+          console.log(response);
+        res.json(response);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
+app.post('/api/verify-payment', async (req, res) => {
+    const { paymentId } = req.body;
+
+    try {
+        const payment = await razorpay.payments.fetch(paymentId);
+        
+        if (payment.status === 'captured') {
+            res.json({ success: true });
+        } else {
+            res.json({ success: false });
+        }
+    } catch (error) {
+        console.log("error hai ----->>>",error);
+        res.status(500).json({ message: 'Server Error' });
+    }
 });
 
 app.listen(PORT, () => {

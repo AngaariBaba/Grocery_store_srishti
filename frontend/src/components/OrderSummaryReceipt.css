@@ -1,0 +1,54 @@
+.order-summary-container {
+    font-family: Arial, sans-serif;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .order-summary-title {
+    text-align: center;
+    color: #333;
+  }
+  
+  .customer-details {
+    margin-bottom: 10px;
+  }
+  
+  .order-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .order-table th, .order-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .order-table th {
+    background-color: #f2f2f2;
+  }
+  
+  .total-label {
+    text-align: right;
+    font-weight: bold;
+  }
+  
+  .total-amount {
+    font-weight: bold;
+  }
+  
+  .contact-info {
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #ddd;
+  }
+  
+  .contact-info p {
+    margin-bottom: 5px;
+  }
+  
