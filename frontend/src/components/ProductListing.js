@@ -8,12 +8,13 @@ import {useNavigate} from 'react-router-dom';
 
 
 
-function Products({InsertIntoOrders,user})
+function Products({InsertIntoOrders,user,idsetter})
 {
 
   const [Samaan,setSaman] = useState([{}]);
   const [Cart,InsertToCart] = useState([{}]);
   const [TotalCost,AddCost] = useState(0);
+  
 
   const navigate = useNavigate();
 
@@ -64,6 +65,7 @@ function Products({InsertIntoOrders,user})
                 image: 'https://example.com/your_logo.png',  // Replace with your logo URL
                 order_id: order_id,
                 handler: function (response) {
+                    idsetter(order_id);
                     const paymentId = response.razorpay_payment_id;
                     VerifyPayment(paymentId); // Implement this function
                 },

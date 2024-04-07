@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import axios from 'axios';
+import {useNavigate} from 'react-router-dom';
 import './ProductForm.css';  // Import the separate CSS file
 
-const ProductForm = () => {
+const ProductForm = ({user}) => {
     const [formData, setFormData] = useState({}); 
+    const nav = useNavigate();
 
     async function handleSubmit() {
         console.log(formData);
@@ -70,6 +72,7 @@ const ProductForm = () => {
             </div>
 
             <button onClick={handleSubmit} className="submitButton">Add Product</button>
+            <button onClick={()=>{nav('/vieworders')}} className="submitButton">View Orders</button>
         </div>
     );
 }

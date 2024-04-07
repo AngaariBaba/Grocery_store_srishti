@@ -4,7 +4,6 @@ const cors = require('cors');
 const Razorpay = require('razorpay');
 const app = express();
 const PORT = 5000;
-
 const db = new sqlite3.Database('./groceryStore.db');
 
 // Create tables
@@ -26,12 +25,70 @@ db.serialize(() => {
         quantity INTEGER DEFAULT 0,
         price REAL
     )`);
+
+    db.run("CREATE TABLE IF NOT EXISTS orders  (orderid TEXT, customername ,contactnumber, product,date)",(err)=>{
+        if(err)
+        {
+            console.log(err);
+        }
+        else
+        {
+            console.log("order creted succeffffuly");
+        }
+    });
+
+
 });
 
 app.use(express.json());
 app.use(cors());
 
 // User Signup
+app.get('/api/getorders',(req,res)=>{
+    db.all("SELECT * FROM orders",(err,orders)=>{
+        if(err)
+        {
+            console.log(err);
+        }
+        else
+        {
+            res.json(orders);
+        }
+    })
+})
+app.post('/api/orderinsert',(req,res)=>{
+
+    //
+    const {name,orderid,phone,date,products} = req.body;
+    products.shift();
+    console.log(products);
+
+    products.map((product)=>{
+        db.run("INSERT INTO orders (orderid,contactnumber,customername,product,date) VALUES (?,?,?,?,?)",[orderid,phone,name,product.pname,date],(err)=>{
+            if(err)
+            {
+                console.log("error in inserting orders ",err);
+            }
+            else
+            {
+                console.log("INSERTED ORDERS");
+            }
+        })
+    });
+
+})
+
+db.all("SELECT * FROM orders",(err,order)=>{
+    if(err)
+    {
+        console.log("DONT NOT EXIST");
+    }
+    else
+    {
+        console.log(order);
+    }
+})
+
 app.post('/api/signup', async (req, res) => {
     console.log("Inerting");
     try {
@@ -201,6 +258,11 @@ app.post('/api/verify-payment', async (req, res) => {
         res.status(500).json({ message: 'Server Error' });
     }
 });
+
+
+
+
+
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
