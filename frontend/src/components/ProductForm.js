@@ -71,7 +71,7 @@ const ProductForm = ({user}) => {
                 />
             </div>
 
-            <button onClick={handleSubmit} className="submitButton">Add Product</button>
+            <button onClick={()=>{alert("Products added");handleSubmit()}} className="submitButton">Add Product</button>
             <button onClick={()=>{nav('/vieworders')}} className="submitButton">View Orders</button>
         </div>
     );

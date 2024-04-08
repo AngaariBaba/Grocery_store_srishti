@@ -5,10 +5,10 @@ import NotAllowed from './NotAllowed';
 import axios from 'axios';
 
 const OrderSummaryReceipt = ({ user, products, id }) => {
-    const [cname, setname] = useState("naman");
-    const [caddress, setaddress] = useState("mathura");
+    const [cname, setname] = useState("notallowed");
+    const [caddress, setaddress] = useState("notallowed");
     const [cnumber, setcustomernumber] = useState('');
-
+    
     const customer = {
         name: cname,
         address: caddress,
@@ -21,6 +21,7 @@ const OrderSummaryReceipt = ({ user, products, id }) => {
             setname(user[0].name);
             setaddress(user[0].address);
             setcustomernumber(user[0].phoneNumber);
+           
         }
     }, [user]);
 
@@ -29,18 +30,30 @@ const OrderSummaryReceipt = ({ user, products, id }) => {
     const a = products;
 
     
+    if (a === undefined) {
+        return (<NotAllowed />);
+    }
 
-    useEffect(() => {
-        if (a === undefined) {
-            return (<NotAllowed />);
-        }
+    function DBGO()
+    {
         async function InsertToDB(name, orderid, phone, date, products) {
             const resp = await axios.post('http://localhost:5000/api/orderinsert', { name, orderid, phone, date, products });
             console.log(resp.data);
+            nav('/vieworders');
         }
-        const date = "3-8-2024";
+        const currentDate = new Date();
+
+        const day = currentDate.getDate();
+        const month = currentDate.getMonth() + 1; // getMonth() returns 0-11
+        const year = currentDate.getFullYear();
+
+        const date = `${day}-${month}-${year}`;
+        
         InsertToDB(cname, id, cnumber, date, products);
-    }, [id, cname, cnumber, products]);  // Added cname, cnumber, and products to the dependency array
+    }
+       
+       
+    // Added cname, cnumber, and products to the dependency array
 
     const filteredProducts = products.filter(item => Object.keys(item).length > 0);
 
@@ -96,6 +109,7 @@ const OrderSummaryReceipt = ({ user, products, id }) => {
             <div className="contact-info">
                 <p>Contact our admin for more details about your order:</p>
                 <strong>Contact Number:</strong> {contactNumber}
+                <button onClick={()=>{alert("Further web to be develoepd!");DBGO();}}>Press to continue...</button>
             </div>
         </div>
     );

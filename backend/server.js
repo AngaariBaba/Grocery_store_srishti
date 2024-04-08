@@ -26,7 +26,7 @@ db.serialize(() => {
         price REAL
     )`);
 
-    db.run("CREATE TABLE IF NOT EXISTS orders  (orderid TEXT, customername ,contactnumber, product,date)",(err)=>{
+    db.run("CREATE TABLE IF NOT EXISTS orders  (orderid TEXT, customername TEXT ,contactnumber TEXT, product TEXT,date TEXT,amount INTEGER,quantity INTEGER)",(err)=>{
         if(err)
         {
             console.log(err);
@@ -35,8 +35,22 @@ db.serialize(() => {
         {
             console.log("order creted succeffffuly");
         }
+
+
+        
+      
     });
 
+
+    
+db.all("SELECT * FROM users ",(err,user)=>{
+    console.log("TRying users");
+    if(err)
+    {
+        console.log(err);
+    }
+    console.log(user);
+});
 
 });
 
@@ -61,10 +75,16 @@ app.post('/api/orderinsert',(req,res)=>{
     //
     const {name,orderid,phone,date,products} = req.body;
     products.shift();
+    console.log(req.body);
     console.log(products);
 
     products.map((product)=>{
-        db.run("INSERT INTO orders (orderid,contactnumber,customername,product,date) VALUES (?,?,?,?,?)",[orderid,phone,name,product.pname,date],(err)=>{
+        if(phone===undefined)
+        {
+            console.log("Not inserting this");
+            return;
+        }
+        db.run("INSERT INTO orders (orderid,contactnumber,customername,product,date,amount) VALUES (?,?,?,?,?,?)",[orderid,phone,name,product.pname,date,],(err)=>{
             if(err)
             {
                 console.log("error in inserting orders ",err);
@@ -78,16 +98,7 @@ app.post('/api/orderinsert',(req,res)=>{
 
 })
 
-db.all("SELECT * FROM orders",(err,order)=>{
-    if(err)
-    {
-        console.log("DONT NOT EXIST");
-    }
-    else
-    {
-        console.log(order);
-    }
-})
+
 
 app.post('/api/signup', async (req, res) => {
     console.log("Inerting");
@@ -101,6 +112,10 @@ app.post('/api/signup', async (req, res) => {
                     console.log("Problem in inserton",err);
                     return res.status(500).json({ message: 'Error registering user', error: err.message });
                 }
+                else
+                {
+                    console.log("isnereting into users => ",req.body);
+                }
                 res.status(201).json({ message: 'User registered successfully' });
             });
     } catch (error) {
@@ -110,10 +125,13 @@ app.post('/api/signup', async (req, res) => {
 
 
 
+
 // User Login
 app.post('/api/login', async (req, res) => {
    
         const { username, password } = req.body;
+        console.log(username,password);
+       
         await db.all("SELECT * FROM users WHERE name=? AND password = ?",[username,password],(err,user)=>{
         if(err)
         {
@@ -121,14 +139,15 @@ app.post('/api/login', async (req, res) => {
         }
         else
         {
-            if(user)
+            console.log("User lengt is ",user.length)
+            if(user.length!=0)
             {
                 console.log(user);
                 res.json({user,found:true});
             }
             else
             {
-                console.log(user);
+            console.log(user);
             res.json({found:false});
             }
         }
@@ -189,16 +208,7 @@ app.delete('/api/products/:id', (req, res) => {
 });
 
 
-db.run('DELETE FROM PRODUCTS WHERE name like ?',['%ilk%'],(err)=>{
-    if(err)
-    {
-        console.log("error agya bhai");
-    }
-    else
-    {
-        console.log("deleted");
-    }
-});
+
 
 
 
